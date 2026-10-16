@@ -1,0 +1,6 @@
+.gradle/
+.toolchain/
+.toolchain-*.zip
+app/build/
+*-debug.apk
+local.properties
