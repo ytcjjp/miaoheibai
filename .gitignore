@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .gradle/
 /build/
 .toolchain/
@@ -7,3 +8,14 @@ app/build/
 !/喵黑白-debug.apk
 !/喵黑白-*-debug.apk
 local.properties
+=======
+.gradle/
+/build/
+.toolchain/
+.toolchain-*.zip
+app/build/
+*-debug.apk
+!/喵黑白-debug.apk
+!/喵黑白-*-debug.apk
+local.properties
+>>>>>>> 1237fa01d3dd93c170a886299956d9f5ece1ccb4
