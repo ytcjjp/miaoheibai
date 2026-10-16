@@ -4,7 +4,7 @@
   const bridge = window.AndroidAssistant;
   const poses = ['idle', 'happy', 'eating', 'playing', 'sleeping', 'hungry', 'tired'];
   const collars = ['pink', 'mint', 'gold'];
-  let state = { name: '小墨', collar: 'pink', theme: 'blush', animations: true, showStats: true,
+  let state = { name: '小墨', collar: 'pink', whiteName: '小银', whiteCollar: 'mint', theme: 'blush', animations: true, showStats: true,
     fullness: 80, happiness: 75, energy: 85, level: 1, days: 1, sleeping: false,
     pose: 'idle', mood: '想陪你玩', message: '小银靠过来啦，我们一起陪着你。' };
   let previousFocus;
@@ -13,15 +13,20 @@
   function render() {
     const pose = poses.includes(state.pose) ? state.pose : 'idle';
     const collar = collars.includes(state.collar) ? state.collar : 'pink';
-    const image = `cat/cat_${pose}_${collar}.svg`;
-    const pairName = `${state.name}和小银`;
+    const whiteName = state.whiteName || '小银';
+    const whiteCollar = collars.includes(state.whiteCollar) ? state.whiteCollar : 'mint';
+    const suffix = whiteCollar === 'mint' ? '' : `_${whiteCollar}`;
+    const image = `cat/cat_${pose}_${collar}${suffix}.svg`;
+    const pairName = `${state.name}和${whiteName}`;
     $('cat-name').textContent = pairName;
     $('cat-level').textContent = `亲密度 Lv.${state.level}`;
     $('cat-mood').textContent = state.mood;
     $('cat-message').textContent = state.message;
     $('cat-image').src = image;
-    $('cat-image').alt = `纯黑猫${state.name}和银渐层白猫小银贴在一起，${state.mood}`;
-    $('cat-home-image').src = `cat/cat_${state.sleeping ? 'sleeping' : 'idle'}_${collar}.svg`;
+    $('cat-image').alt = `纯黑猫${state.name}和银渐层白猫${whiteName}贴在一起，${state.mood}`;
+    $('cat-home-image').src = `cat/cat_${state.sleeping ? 'sleeping' : 'idle'}_${collar}${suffix}.svg`;
+    $('lucky-cat').src = `cat/cat_happy_${collar}${suffix}.svg`;
+    $('lucky-cat').alt = `一起送来好运的${pairName}`;
     $('cat-home-caption').textContent = `${pairName} · Lv.${state.level}`;
     $('pet-cat').setAttribute('aria-label', `摸摸${pairName}`);
     $('pet-cat').title = `摸摸${pairName}`;
@@ -64,7 +69,9 @@
     window.refreshCat();
     previousFocus = document.activeElement;
     $('cat-nickname').value = state.name;
+    $('cat-white-nickname').value = state.whiteName || '小银';
     document.querySelectorAll('[name="cat-collar"]').forEach((node) => { node.checked = node.value === state.collar; });
+    document.querySelectorAll('[name="cat-white-collar"]').forEach((node) => { node.checked = node.value === (state.whiteCollar || 'mint'); });
     document.querySelectorAll('[name="cat-theme"]').forEach((node) => { node.checked = node.value === state.theme; });
     $('cat-animations').checked = state.animations !== false;
     $('cat-show-stats').checked = state.showStats !== false;
@@ -87,13 +94,17 @@
     event.preventDefault();
     $('cat-settings-error').hidden = true;
     const name = $('cat-nickname').value.trim();
-    if (!name || Array.from(name).length > 12) {
-      $('cat-settings-error').textContent = '昵称请输入 1 到 12 个字';
-      $('cat-settings-error').hidden = false;
-      return;
+    const whiteName = $('cat-white-nickname').value.trim();
+    for (const [label, value] of [['小黑', name], ['小白', whiteName]]) {
+      if (!value || Array.from(value).length > 12 || /[\u0000-\u001f\u007f-\u009f]/.test(value)) {
+        $('cat-settings-error').textContent = `${label}昵称请输入 1 到 12 个字`;
+        $('cat-settings-error').hidden = false;
+        return;
+      }
     }
     if (!bridge || !bridge.saveCatSettings) { toast('猫咪设置在安卓安装版中可用'); return; }
     const settings = { name, collar: document.querySelector('[name="cat-collar"]:checked').value,
+      whiteName, whiteCollar: document.querySelector('[name="cat-white-collar"]:checked').value,
       theme: document.querySelector('[name="cat-theme"]:checked').value,
       animations: $('cat-animations').checked, showStats: $('cat-show-stats').checked };
     try {

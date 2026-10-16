@@ -49,7 +49,7 @@ function cat(pose, silver, collar) {
   </g>`;
 }
 
-function illustration(pose, collar) {
+function illustration(pose, collar, whiteCollar) {
   // Each state is one static composition, shared by the app and existing widgets.
   const cuddling = pose === 'sleeping' || pose === 'tired';
   const dining = pose === 'eating' || pose === 'hungry';
@@ -68,7 +68,7 @@ function illustration(pose, collar) {
     </defs>
     <ellipse cx="256" cy="456" rx="204" ry="15" fill="#67574f0e"/>
     <g transform="translate(165 ${blackY}) rotate(${cuddling ? 10 : pose === 'happy' ? 8 : 4})">${cat(pose, false, collar)}</g>
-    <g transform="translate(347 ${silverY}) rotate(${cuddling ? -12 : pose === 'happy' ? -10 : -7})">${cat(pose, true, '#91c6b0')}</g>
+    <g transform="translate(347 ${silverY}) rotate(${cuddling ? -12 : pose === 'happy' ? -10 : -7})">${cat(pose, true, whiteCollar)}</g>
     ${extra}${heart}
   </svg>`.split('\n').map(line => line.trimEnd()).join('\n');
 }
@@ -76,11 +76,14 @@ function illustration(pose, collar) {
 (async () => {
   fs.mkdirSync(web, { recursive: true }); fs.mkdirSync(native, { recursive: true });
   for (const [collar, color] of Object.entries(collars)) {
-    for (const pose of poses) {
-      const svg = illustration(pose, color);
-      fs.writeFileSync(path.join(web, `cat_${pose}_${collar}.svg`), svg);
-      await sharp(Buffer.from(svg)).resize(512, 512).png().toFile(path.join(web, `cat_${pose}_${collar}.png`));
-      await sharp(Buffer.from(svg)).resize(1024, 1024).png().toFile(path.join(native, `cat_${pose}_${collar}.png`));
+    for (const [whiteCollar, whiteColor] of Object.entries(collars)) {
+      for (const pose of poses) {
+        const name = `cat_${pose}_${collar}${whiteCollar === 'mint' ? '' : `_${whiteCollar}`}`;
+        const svg = illustration(pose, color, whiteColor);
+        fs.writeFileSync(path.join(web, `${name}.svg`), svg);
+        await sharp(Buffer.from(svg)).resize(512, 512).png().toFile(path.join(web, `${name}.png`));
+        await sharp(Buffer.from(svg)).resize(1024, 1024).png().toFile(path.join(native, `${name}.png`));
+      }
     }
   }
   for (const [action, name] of Object.entries({ pet: 'hand-heart', feed: 'fish', play: 'volleyball', sleep: 'moon', wake: 'sun', settings: 'settings-2' })) {
@@ -89,5 +92,5 @@ function illustration(pose, collar) {
   for (const [action, name] of Object.entries({ play: 'play', pause: 'pause', next: 'skip-forward', stop: 'square', music: 'music-2' })) {
     await sharp(path.join(root, 'app/src/main/assets/icons', `${name}.svg`)).resize(64, 64).png().toFile(path.join(native, `bgm_icon_${action}.png`));
   }
-  console.log('Rendered 21 original paired-cat scenes and widget action icons.');
+  console.log('Rendered 63 paired-cat scenes with independent collars and widget action icons.');
 })().catch(error => { console.error(error); process.exitCode = 1; });

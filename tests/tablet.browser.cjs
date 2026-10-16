@@ -35,6 +35,8 @@ const sharp = require('sharp');
       });
       await page.goto(pathToFileURL(path.resolve(__dirname, '../app/src/main/assets/index.html')).href);
       const checkLayout = async () => {
+        await page.waitForFunction(() => Array.from(document.querySelectorAll('main:not([hidden]) img'))
+          .every(img => img.complete && img.naturalWidth > 0));
         const problems = await page.evaluate(() => {
           const failures = [];
           if (document.documentElement.scrollWidth > innerWidth) failures.push('horizontal overflow');
@@ -69,11 +71,14 @@ const sharp = require('sharp');
         }
         await page.evaluate(() => window.openAssistantPage('cat'));
         await page.locator('#pet-cat').tap();
-        assert.match(await page.locator('#cat-image').getAttribute('src'), /happy_pink\.svg$/);
+        assert.match(await page.locator('#cat-image').getAttribute('src'), /happy_pink(?:_gold)?\.svg$/);
         await page.locator('#open-cat-settings').tap();
         await page.locator('#cat-nickname').fill('一二三四五六七八九十一二');
+        await page.locator('#cat-white-nickname').fill('一二三四五六七八九十一二');
+        await page.locator('[name=cat-white-collar][value=gold]').check();
         await page.locator('#save-cat-settings').tap();
         assert.equal(await page.locator('#cat-settings-overlay').isVisible(), false);
+        assert.match(await page.locator('#cat-image').getAttribute('src'), /_pink_gold\.svg$/);
         await checkLayout();
         assert.equal(await page.locator('#cat-name').evaluate(node => node.scrollWidth <= node.clientWidth), true);
         await page.locator('#open-cat-settings').tap();

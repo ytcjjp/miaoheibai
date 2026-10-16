@@ -60,22 +60,35 @@ const sharp = require('sharp');
     await page.locator('#save-cat-settings').click();
     assert.equal(await page.locator('#cat-settings-error').isVisible(), true);
     await page.locator('#cat-nickname').fill('煤球');
+    assert.equal(await page.locator('#cat-white-nickname').inputValue(), '小银');
+    assert.equal(await page.locator('[name=cat-white-collar][value=mint]').isChecked(), true);
+    await page.locator('#cat-white-nickname').fill('   ');
+    await page.locator('#save-cat-settings').click();
+    assert.match(await page.locator('#cat-settings-error').textContent(), /小白/);
+    await page.locator('#cat-white-nickname').fill('雪球');
+    await page.locator('[name=cat-white-collar][value=gold]').check();
     await page.locator('[name=cat-collar][value=mint]').check();
     await page.locator('[name=cat-theme][value=clear]').check();
     await page.locator('#cat-animations').uncheck();
     await page.locator('#cat-show-stats').uncheck();
     await page.locator('#save-cat-settings').click();
     assert.equal(await page.locator('#cat-settings-overlay').isVisible(), false);
-    assert.equal(await page.locator('#cat-name').textContent(), '煤球和小银');
-    assert.match(await page.locator('#cat-image').getAttribute('src'), /_mint\.svg$/);
+    assert.equal(await page.locator('#cat-name').textContent(), '煤球和雪球');
+    assert.match(await page.locator('#cat-image').getAttribute('src'), /_mint_gold\.svg$/);
+    assert.match(await page.locator('#cat-home-caption').textContent(), /煤球和雪球/);
+    assert.match(await page.locator('#lucky-cat').getAttribute('src'), /happy_mint_gold\.svg$/);
     assert.equal(await page.locator('#cat-page').evaluate(node => node.classList.contains('motion-off')), true);
     const saved = await page.evaluate(() => JSON.parse(localStorage.getItem('cat-test-state')));
     assert.equal(saved.bond, 2);
     assert.equal(saved.theme, 'clear');
     assert.equal(saved.showStats, false);
+    assert.equal(saved.whiteName, '雪球');
+    assert.equal(saved.whiteCollar, 'gold');
     await page.reload();
     await page.evaluate(() => window.openAssistantPage('cat-settings'));
     assert.equal(await page.locator('#cat-nickname').inputValue(), '煤球');
+    assert.equal(await page.locator('#cat-white-nickname').inputValue(), '雪球');
+    assert.equal(await page.locator('[name=cat-white-collar][value=gold]').isChecked(), true);
     await page.evaluate(() => window.goHome());
     assert.equal(await page.locator('#cat-settings-overlay').isVisible(), false);
     assert.equal(await page.locator('#cat-page').isVisible(), true);
@@ -97,6 +110,7 @@ const sharp = require('sharp');
       await page.evaluate(() => {
         const state = JSON.parse(localStorage.getItem('cat-test-state'));
         state.name = '一二三四五六七八九十一二';
+        state.whiteName = '一二三四五六七八九十一二';
         localStorage.setItem('cat-test-state', JSON.stringify(state));
         window.refreshCat();
       });
@@ -119,6 +133,7 @@ const sharp = require('sharp');
     await page.evaluate(() => {
       const state = JSON.parse(localStorage.getItem('cat-test-state'));
       state.name = '煤球';
+      state.whiteName = '雪球';
       localStorage.setItem('cat-test-state', JSON.stringify(state));
       window.refreshCat();
     });
@@ -150,13 +165,23 @@ const sharp = require('sharp');
     }
     assert.equal(checksums.size, 7, 'all seven poses must have distinct artwork');
     for (const collar of ['pink', 'mint', 'gold']) {
+      for (const whiteCollar of ['pink', 'mint', 'gold']) {
       for (const pose of ['idle', 'happy', 'eating', 'playing', 'sleeping', 'hungry', 'tired']) {
-        const file = `cat_${pose}_${collar}.png`;
+        const file = `cat_${pose}_${collar}${whiteCollar === 'mint' ? '' : `_${whiteCollar}`}.png`;
         const web = await sharp(path.resolve(__dirname, '../app/src/main/assets/cat', file)).metadata();
         const widget = await sharp(path.resolve(__dirname, '../app/src/main/res/drawable-nodpi', file)).metadata();
         assert.deepEqual([web.width, web.height, widget.width, widget.height], [512, 512, 1024, 1024]);
+        const svg = require('node:fs').readFileSync(path.resolve(__dirname, '../app/src/main/assets/cat', file.replace('.png', '.svg')), 'utf8');
+        const colors = { pink: '#ed9b9d', mint: '#91c6b0', gold: '#e9bf67' };
+        const collars = [...svg.matchAll(/d="M-40 72q40 14 80 0" fill="none" stroke="([^"]+)"/g)].map(match => match[1]);
+        assert.deepEqual(collars, [colors[collar], colors[whiteCollar]], 'each cat must wear its own selected collar');
+      }
       }
     }
-    console.log('PASS: cat actions, preserved settings, widget bridge, long-name layout at four widths and both cats in seven distinct poses.');
+    const widgetSource = require('node:fs').readFileSync(path.resolve(__dirname, '../app/src/main/java/com/zixian/assistant/CatWidget.java'), 'utf8');
+    const art = [...widgetSource.matchAll(/R\.drawable\.(cat_(?:idle|happy|sleeping|hungry|tired|eating|playing)_\w+)/g)].map(match => match[1]);
+    assert.equal(new Set(art).size, 63, 'widget mapping must include every pair of collars');
+    for (const resource of art) assert.ok(require('node:fs').existsSync(path.resolve(__dirname, `../app/src/main/res/drawable-nodpi/${resource}.png`)));
+    console.log('PASS: independent settings, legacy defaults, persistence, widget bridge, two long names at four widths and all 63 collar/pose assets.');
   } finally { await browser.close(); }
 })().catch(error => { console.error(error); process.exitCode = 1; });

@@ -83,6 +83,62 @@ public final class CatStateTest {
         CatState.act(CatState.fresh(NOW), "reset_everything", NOW);
     }
 
+    @Test public void oldSavesGainWhiteDefaultsWithoutLosingHistory() throws Exception {
+        JSONObject old = CatState.act(CatState.fresh(NOW), "pet", NOW);
+        old.remove("whiteName"); old.remove("whiteCollar");
+        old.put("name", "煤球").put("collar", "gold");
+        JSONObject view = CatState.view(old, NOW);
+        assertEquals("小银", view.getString("whiteName"));
+        assertEquals("mint", view.getString("whiteCollar"));
+        assertEquals("煤球", view.getString("name"));
+        assertEquals("gold", view.getString("collar"));
+        assertEquals(2, view.getInt("bond"));
+        assertEquals(NOW, view.getLong("adoptedAt"));
+        assertFalse(old.has("whiteName"));
+    }
+
+    private JSONObject options() throws Exception {
+        return new JSONObject().put("name", "煤球").put("collar", "pink").put("whiteName", " 雪球 ")
+                .put("whiteCollar", "gold").put("theme", "mint").put("animations", false).put("showStats", true);
+    }
+
+    @Test public void bothCatsHaveIndependentSettingsAndAllNineCollars() throws Exception {
+        JSONObject old = CatState.act(CatState.fresh(NOW), "pet", NOW);
+        for (String black : new String[]{"pink", "mint", "gold"}) {
+            for (String white : new String[]{"pink", "mint", "gold"}) {
+                JSONObject updated = CatState.settings(old, options().put("collar", black).put("whiteCollar", white), NOW + 1000);
+                assertEquals("雪球", updated.getString("whiteName"));
+                assertEquals("煤球", updated.getString("name"));
+                assertEquals(black, updated.getString("collar"));
+                assertEquals(white, updated.getString("whiteCollar"));
+                assertEquals(2, updated.getInt("bond"));
+                assertEquals(NOW, updated.getLong("adoptedAt"));
+                assertTrue(CatState.view(updated, NOW + 1000).getString("message").contains("雪球"));
+                assertTrue(CatState.act(updated, "feed", NOW + 1000).getString("message").contains("雪球"));
+            }
+        }
+        assertEquals("小银", old.getString("whiteName"));
+        JSONObject saved = CatState.settings(old, options(), NOW);
+        JSONObject partial = options(); partial.remove("whiteName"); partial.remove("whiteCollar");
+        JSONObject kept = CatState.settings(saved, partial, NOW);
+        assertEquals("雪球", kept.getString("whiteName"));
+        assertEquals("gold", kept.getString("whiteCollar"));
+    }
+
+    @Test public void invalidWhiteSettingsAreRejectedWithoutChangingSavedState() throws Exception {
+        JSONObject old = CatState.fresh(NOW);
+        String original = old.toString();
+        for (String invalid : new String[]{"", "   ", "一二三四五六七八九十一二三", "雪\u0001球"}) {
+            try { CatState.settings(old, options().put("whiteName", invalid), NOW); fail("accepted invalid white nickname"); }
+            catch (JSONException expected) { assertTrue(expected.getMessage().contains("小白")); }
+        }
+        try { CatState.settings(old, options().put("whiteCollar", "../other"), NOW); fail("accepted invalid white collar"); }
+        catch (JSONException expected) { assertTrue(expected.getMessage().contains("项圈")); }
+        assertEquals(original, old.toString());
+        assertEquals("一二三四五六七八九十一二", CatState.settings(old,
+                options().put("whiteName", "一二三四五六七八九十一二"), NOW).getString("whiteName"));
+    }
+
     @Test(expected = JSONException.class) public void rejectsUnsafeAssetSettings() throws Exception {
         CatState.settings(CatState.fresh(NOW), new JSONObject().put("name", "小墨")
                 .put("collar", "../other").put("theme", "blush"), NOW);

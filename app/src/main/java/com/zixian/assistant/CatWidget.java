@@ -27,6 +27,17 @@ public final class CatWidget extends AppWidgetProvider {
             {R.drawable.cat_idle_gold, R.drawable.cat_happy_gold, R.drawable.cat_sleeping_gold, R.drawable.cat_hungry_gold, R.drawable.cat_tired_gold, R.drawable.cat_eating_gold, R.drawable.cat_playing_gold}
     };
 
+    private static final int[][] WHITE_PINK = {
+            {R.drawable.cat_idle_pink_pink, R.drawable.cat_happy_pink_pink, R.drawable.cat_sleeping_pink_pink, R.drawable.cat_hungry_pink_pink, R.drawable.cat_tired_pink_pink, R.drawable.cat_eating_pink_pink, R.drawable.cat_playing_pink_pink},
+            {R.drawable.cat_idle_mint_pink, R.drawable.cat_happy_mint_pink, R.drawable.cat_sleeping_mint_pink, R.drawable.cat_hungry_mint_pink, R.drawable.cat_tired_mint_pink, R.drawable.cat_eating_mint_pink, R.drawable.cat_playing_mint_pink},
+            {R.drawable.cat_idle_gold_pink, R.drawable.cat_happy_gold_pink, R.drawable.cat_sleeping_gold_pink, R.drawable.cat_hungry_gold_pink, R.drawable.cat_tired_gold_pink, R.drawable.cat_eating_gold_pink, R.drawable.cat_playing_gold_pink}
+    };
+    private static final int[][] WHITE_GOLD = {
+            {R.drawable.cat_idle_pink_gold, R.drawable.cat_happy_pink_gold, R.drawable.cat_sleeping_pink_gold, R.drawable.cat_hungry_pink_gold, R.drawable.cat_tired_pink_gold, R.drawable.cat_eating_pink_gold, R.drawable.cat_playing_pink_gold},
+            {R.drawable.cat_idle_mint_gold, R.drawable.cat_happy_mint_gold, R.drawable.cat_sleeping_mint_gold, R.drawable.cat_hungry_mint_gold, R.drawable.cat_tired_mint_gold, R.drawable.cat_eating_mint_gold, R.drawable.cat_playing_mint_gold},
+            {R.drawable.cat_idle_gold_gold, R.drawable.cat_happy_gold_gold, R.drawable.cat_sleeping_gold_gold, R.drawable.cat_hungry_gold_gold, R.drawable.cat_tired_gold_gold, R.drawable.cat_eating_gold_gold, R.drawable.cat_playing_gold_gold}
+    };
+
     @Override public void onUpdate(Context context, AppWidgetManager manager, int[] ids) { updateAll(context); }
 
     @Override public void onAppWidgetOptionsChanged(Context context, AppWidgetManager manager, int id, Bundle options) { updateAll(context); }
@@ -79,18 +90,19 @@ public final class CatWidget extends AppWidgetProvider {
                 view.setTextViewText(R.id.cat_widget_message, state.optString("error"));
             } else {
                 String name = state.optString("name", "小墨");
+                String whiteName = state.optString("whiteName", "小银");
                 String theme = state.optString("theme", "blush");
                 int background = theme.equals("mint") ? R.drawable.cat_widget_mint
                         : theme.equals("clear") ? R.drawable.cat_widget_clear : R.drawable.cat_widget_blush;
                 view.setInt(R.id.cat_widget_root, "setBackgroundResource", background);
-                view.setTextViewText(R.id.cat_widget_name, name + "和小银");
+                view.setTextViewText(R.id.cat_widget_name, name + "和" + whiteName);
                 view.setTextViewText(R.id.cat_widget_level, "Lv." + state.optInt("level", 1));
                 view.setTextViewText(R.id.cat_widget_message, state.optString("message"));
                 view.setTextViewText(R.id.cat_widget_stats, "饱食 " + Math.round(state.optDouble("fullness"))
                         + " · 心情 " + Math.round(state.optDouble("happiness")) + " · 精力 " + Math.round(state.optDouble("energy")));
                 view.setViewVisibility(R.id.cat_widget_stats, state.optBoolean("showStats", true) ? View.VISIBLE : View.GONE);
                 view.setImageViewResource(R.id.cat_widget_image, resource(state));
-                view.setContentDescription(R.id.cat_widget_image, "纯黑猫" + name + "和银渐层白猫小银，" + state.optString("mood") + "，点我摸摸");
+                view.setContentDescription(R.id.cat_widget_image, "纯黑猫" + name + "和银渐层白猫" + whiteName + "，" + state.optString("mood") + "，点我摸摸");
                 boolean sleeping = state.optBoolean("sleeping");
                 view.setTextViewText(R.id.cat_widget_rest_label, sleeping ? "叫醒" : "睡觉");
                 view.setImageViewResource(R.id.cat_widget_rest_icon, sleeping ? R.drawable.cat_icon_wake : R.drawable.cat_icon_sleep);
@@ -120,7 +132,8 @@ public final class CatWidget extends AppWidgetProvider {
         String pose = state.optString("widgetPose");
         int index = pose.equals("happy") ? 1 : pose.equals("sleeping") ? 2 : pose.equals("hungry") ? 3 : pose.equals("tired") ? 4
                 : pose.equals("eating") ? 5 : pose.equals("playing") ? 6 : 0;
-        return ART[color][index];
+        String whiteCollar = state.optString("whiteCollar", "mint");
+        return (whiteCollar.equals("pink") ? WHITE_PINK : whiteCollar.equals("gold") ? WHITE_GOLD : ART)[color][index];
     }
 
     private static PendingIntent action(Context context, int id, String action) {
