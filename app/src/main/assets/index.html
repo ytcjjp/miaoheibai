@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#fff4f0">
+  <title>喵黑白</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="lucky.css">
+</head>
+<body>
+  <main id="home" class="page">
+    <header class="home-head">
+      <div class="head-row">
+        <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><path d="M8 13 9 5l6 5h3l6-5 1 8c2 2 3 4 3 7a12 12 0 0 1-24 0c0-3 1-5 4-7Z" fill="currentColor"/><circle cx="12" cy="18" r="1.3" fill="#fff4f0"/><circle cx="20" cy="18" r="1.3" fill="#fff4f0"/><path d="m15 21 1 1 1-1m-1 1v2m-2 0h4" stroke="#fff4f0" stroke-width="1.2" stroke-linecap="round"/></svg></span>
+        <span class="head-label">喵黑白</span>
+        <span id="today" class="today"></span>
+      </div>
+      <div class="welcome">
+        <p class="eyebrow">黑猫白猫，陪你慢慢来</p>
+        <h1>喵黑白<span class="period">。</span></h1>
+        <time id="home-time" class="home-time" aria-label="当前时间">--:--:--</time>
+        <p class="welcome-sub">今天也慢慢来，有猫陪着你。</p>
+      </div>
+      <div class="cat-portrait"><img src="cat-portrait.png" alt="金色眼睛的黑猫"/><span>今天也要元气满满</span></div>
+      <span class="paw paw-one" aria-hidden="true">✿</span><span class="paw paw-two" aria-hidden="true">•</span>
+    </header>
+
+    <section class="weather-band" aria-label="当前天气">
+      <button id="open-weather" class="weather-entry" type="button">
+        <img id="home-weather-icon" class="weather-icon" src="icons/sun.svg" alt="">
+        <span><strong id="home-weather">选择城市</strong><small id="home-weather-status">查看当前天气</small></span>
+        <span class="chevron" aria-hidden="true">›</span>
+      </button>
+      <button id="pin-widget" class="icon-button" type="button" title="添加桌面小组件" aria-label="添加桌面小组件"><img src="icons/panels-top-left.svg" alt=""></button>
+    </section>
+
+    <section class="section tools" aria-labelledby="tools-title">
+      <div class="section-heading">
+          <div><p class="section-kicker">陪你安排好每一刻</p><h2 id="tools-title">今天用什么</h2></div>
+        <span class="section-count" aria-hidden="true">06</span>
+      </div>
+      <button id="open-timer" class="tool-row" type="button">
+        <span class="tool-icon" aria-hidden="true">
+          <svg viewBox="0 0 32 32" fill="none"><circle cx="16" cy="18" r="10" stroke="currentColor" stroke-width="2"/><path d="M16 18V12m0 6 4 2M12 3h8M16 3v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </span>
+        <span class="tool-copy"><strong>倒计时</strong><small id="tool-subtitle">专注每一分钟</small></span>
+        <span class="arrow" aria-hidden="true">›</span>
+      </button>
+      <div class="tools-grid">
+        <button class="mini-tool mint-tool" data-page="notes" type="button"><img src="icons/notebook-pen.svg" alt=""><strong>备忘录</strong><small id="notes-count">随手记一笔</small></button>
+        <button class="mini-tool yellow-tool" data-page="tasks" type="button"><img src="icons/list-todo.svg" alt=""><strong>待办事项</strong><small id="tasks-count">今天想做什么</small></button>
+        <button class="mini-tool pink-tool" data-page="events" type="button"><img src="icons/calendar-days.svg" alt=""><strong>日期倒计时</strong><small id="events-count">记住重要日子</small></button>
+        <button class="mini-tool cat-tool" data-page="cat" type="button"><img id="cat-home-image" src="cat/cat_idle_pink.png" alt=""><strong>小黑猫伙伴</strong><small id="cat-home-caption">小墨在等你</small></button>
+      </div>
+      <button class="tool-row lucky-entry" data-page="lucky" type="button"><span class="tool-icon"><img src="icons/paw-print.svg" alt=""></span><span class="tool-copy"><strong>每日幸运数字</strong><small>让小猫捎来一点好运</small></span><span class="arrow" aria-hidden="true">›</span></button>
+    </section>
+
+    <section id="home-agenda" class="section" hidden><button id="next-event-button" class="agenda-row" type="button"><img src="icons/calendar-days.svg" alt=""><span id="next-event-title"></span><strong id="next-event-time"></strong></button></section>
+
+    <section id="active-section" class="section active-section" hidden aria-labelledby="active-title">
+      <div class="section-heading">
+        <div><p class="section-kicker">小管家正在陪你</p><h2 id="active-title">正在计时</h2></div>
+      </div>
+      <button id="active-timer" class="active-row" type="button">
+        <span class="active-dot" aria-hidden="true"></span>
+        <span id="active-description">倒计时进行中</span>
+        <strong id="active-time">00:00</strong>
+        <span class="chevron" aria-hidden="true">›</span>
+      </button>
+    </section>
+
+    <section class="section recent" aria-labelledby="recent-title">
+      <div class="section-heading">
+        <div><p class="section-kicker">留下的小脚印</p><h2 id="recent-title">最近使用</h2></div>
+      </div>
+      <div id="recent-list" class="recent-list"></div>
+    </section>
+    <footer class="footer"><svg class="footer-paw" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 11c-2.1 0-3.2-2.1-2.7-3.8.5-1.7 2.1-1.9 3-.4L9 9.3c.6-.4 1.3-.6 2-.6s1.4.2 2 .6l1.7-2.5c.9-1.5 2.5-1.3 3 .4.5 1.7-.6 3.8-2.7 3.8 1.4 1.1 2.5 2.6 2.5 4.4 0 2.4-2.5 3.6-6.5 3.6s-6.5-1.2-6.5-3.6c0-1.8 1.1-3.3 2.5-4.4Z" fill="currentColor"/></svg> 喵黑白 <span>·</span> 每一刻都算数</footer>
+  </main>
+
+  <main id="timer-page" class="page timer-page" hidden>
+    <header class="timer-head">
+      <button id="back" class="icon-button back" type="button" aria-label="返回首页" title="返回首页">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+      </button>
+      <strong>倒计时</strong>
+      <span class="head-spacer"></span>
+    </header>
+
+    <div class="timer-content">
+      <div class="timer-title-row">
+        <div><p class="section-kicker"><svg class="white-cat" viewBox="0 0 28 28" fill="none" aria-hidden="true"><path d="m5 11 1-7 6 4h4l6-4 1 7a10 10 0 1 1-18 0Z" fill="#fff" stroke="#c7b9b5" stroke-width="1.3" stroke-linejoin="round"/><circle cx="11" cy="15" r="1" fill="#5d5554"/><circle cx="17" cy="15" r="1" fill="#5d5554"/><path d="m13 18 1 1 1-1m-1 1v2m-2 0h4" stroke="#df796e" stroke-width="1.1" stroke-linecap="round"/></svg> 白猫也来陪你</p><h2>倒计时</h2></div>
+        <span id="status-tag" class="status-tag">准备开始</span>
+      </div>
+
+      <div class="dial-wrap" aria-live="off">
+        <svg class="dial" viewBox="0 0 280 280" aria-hidden="true">
+          <circle class="dial-track" cx="140" cy="140" r="119"/>
+          <circle id="dial-progress" class="dial-progress" cx="140" cy="140" r="119"/>
+        </svg>
+        <div class="dial-center">
+          <span id="dial-caption" class="dial-caption">设定时间</span>
+          <strong id="time-display" class="time-display">03:00</strong>
+          <span id="dial-sub" class="dial-sub">准备好就开始</span>
+        </div>
+      </div>
+
+      <div id="setup-controls" class="setup-controls">
+        <div class="control-heading"><h3>想计时多久？</h3><span>最长 99 小时</span></div>
+        <div class="time-inputs">
+          <label><input id="hours" type="number" inputmode="numeric" min="0" max="99" placeholder="00" value="0"><span>小时</span></label>
+          <span class="input-colon">:</span>
+          <label><input id="minutes" type="number" inputmode="numeric" min="0" max="59" placeholder="00" value="3"><span>分钟</span></label>
+          <span class="input-colon">:</span>
+          <label><input id="seconds" type="number" inputmode="numeric" min="0" max="59" placeholder="00" value="0"><span>秒</span></label>
+        </div>
+        <p id="input-error" class="input-error" role="alert" hidden></p>
+        <button id="custom-start" class="primary-button" type="button">开始倒计时 <span aria-hidden="true">→</span></button>
+
+        <div class="quick-heading"><h3>懒得设置？</h3><span>点一下就开始</span></div>
+        <div class="quick-grid">
+          <button class="quick-button" type="button" data-seconds="180"><span class="quick-symbol">03<span>′</span></span><span class="quick-text">3 分钟 <span aria-hidden="true">↗</span></span></button>
+          <button class="quick-button" type="button" data-seconds="90"><span class="quick-symbol">01<span>′</span>30<span>″</span></span><span class="quick-text">1 分 30 秒 <span aria-hidden="true">↗</span></span></button>
+        </div>
+      </div>
+
+      <div id="running-controls" class="running-controls" hidden>
+        <button id="pause-resume" class="primary-button" type="button">暂停</button>
+        <button id="cancel" class="secondary-button" type="button">取消倒计时</button>
+      </div>
+      <div id="finished-controls" class="finished-controls" hidden>
+        <p class="finish-message">时间到了。</p>
+        <button id="restart" class="primary-button" type="button">再来一次 <span aria-hidden="true">→</span></button>
+        <button id="reset-timer" class="secondary-button" type="button">重新设置时间</button>
+      </div>
+    </div>
+  </main>
+
+  <main id="planner-page" class="page" hidden>
+    <header class="timer-head"><button class="icon-button page-back" aria-label="返回首页" title="返回首页"><img src="icons/chevron-left.svg" alt=""></button><strong id="planner-title">备忘录</strong><button id="add-item" class="icon-button" aria-label="新增记录" title="新增记录"><img src="icons/plus.svg" alt=""></button></header>
+    <div class="feature-content">
+      <div id="calendar-actions" class="action-row" hidden><button id="import-calendar" class="text-action"><img src="icons/calendar-plus.svg" alt="">从日历导入</button><button id="open-calendar" class="text-action">系统日历</button></div>
+      <label class="search-box"><img src="icons/search.svg" alt=""><input id="planner-search" type="search" maxlength="80" placeholder="搜索记录" aria-label="搜索记录"></label>
+      <div id="task-filters" class="segmented" role="group" aria-label="待办筛选" hidden><button data-filter="pending" aria-pressed="true">未完成</button><button data-filter="all" aria-pressed="false">全部</button><button data-filter="done" aria-pressed="false">已完成</button></div>
+      <p id="planner-summary" class="muted"></p>
+      <div id="planner-list" class="planner-list"></div>
+    </div>
+  </main>
+
+  <main id="weather-page" class="page" hidden>
+    <header class="timer-head"><button class="icon-button page-back" aria-label="返回首页" title="返回首页"><img src="icons/chevron-left.svg" alt=""></button><strong>天气</strong><button id="refresh-weather" class="icon-button" aria-label="刷新天气" title="刷新天气"><img src="icons/refresh-cw.svg" alt=""></button></header>
+    <div class="feature-content">
+      <div class="weather-detail"><img id="weather-detail-icon" src="icons/sun.svg" alt=""><h2 id="weather-city">还没有选择城市</h2><strong id="weather-temperature">--°</strong><p id="weather-condition">选择你的城市，看看今天的天气</p><p id="weather-range" class="muted"></p></div>
+      <div id="weather-facts" class="weather-facts" hidden><div><small>体感</small><strong id="weather-feels"></strong></div><div><small>湿度</small><strong id="weather-humidity"></strong></div><div><small>风速</small><strong id="weather-wind"></strong></div></div>
+      <p id="weather-status" class="status-copy" role="status"></p>
+      <form id="city-form" class="city-form"><label for="city-query">选择城市</label><div class="search-box"><input id="city-query" type="search" placeholder="城市名或拼音" minlength="2" maxlength="80" required autocomplete="off"><button id="city-search" class="icon-button" type="submit" title="搜索城市" aria-label="搜索城市"><img src="icons/search.svg" alt=""></button></div></form>
+      <div id="city-results" class="city-results" aria-live="polite"></div>
+      <button id="weather-source" class="source-link">天气数据：Open-Meteo · 城市数据：GeoNames</button>
+    </div>
+  </main>
+
+  <main id="lucky-page" class="page" hidden>
+    <header class="timer-head"><button class="icon-button page-back" type="button" aria-label="返回首页" title="返回首页"><img src="icons/chevron-left.svg" alt=""></button><strong>每日幸运数字</strong><span class="lucky-head-space" aria-hidden="true"></span></header>
+    <div class="feature-content lucky-content">
+      <div class="lucky-greeting"><img id="lucky-cat" src="cat/cat_happy_gold.png" alt="送来好运的小黑猫"><p id="lucky-date" class="section-kicker"></p><h2>今天也有小幸运</h2><p>愿美好的小事，悄悄来到你身边。</p></div>
+      <div id="lucky-results" class="lucky-results" aria-busy="false">
+        <article class="lucky-ticket"><div class="lucky-ticket-heading"><h3>体彩 7 位数</h3><span>江苏体彩</span></div><div id="lucky-seven" class="lucky-balls" role="group" aria-label="体彩 7 位数，等待抽取"></div><p class="lucky-ticket-caption">7 位数字 · 按位排列</p></article>
+        <article class="lucky-ticket"><div class="lucky-ticket-heading"><h3>双色球</h3><span>中国福彩</span></div><div id="lucky-double" class="lucky-balls" role="group" aria-label="双色球，等待抽取"></div><p class="lucky-ticket-caption"><span class="lucky-red-label">红球</span> 6 个 <span class="lucky-blue-label">蓝球</span> 1 个</p></article>
+      </div>
+      <p id="lucky-status" class="lucky-status" role="status" aria-live="polite">小猫正在准备好运</p>
+      <button id="refresh-lucky" class="primary-button" type="button"><img src="icons/refresh-cw.svg" alt=""><span id="lucky-button-label">刷新幸运数字</span></button>
+      <p id="lucky-updated" class="lucky-updated"></p>
+      <p class="lucky-note">随机小惊喜，非官方开奖号码。</p>
+    </div>
+  </main>
+
+  <main id="cat-page" class="page cat-page" hidden>
+    <header class="timer-head"><button class="icon-button page-back" aria-label="返回首页" title="返回首页"><img src="icons/chevron-left.svg" alt=""></button><strong>小黑猫伙伴</strong><button id="open-cat-settings" class="icon-button" aria-label="小黑猫设置" title="小黑猫设置"><img src="icons/settings-2.svg" alt=""></button></header>
+    <div class="feature-content cat-content">
+      <div class="cat-heading"><div><h2 id="cat-name">小墨</h2><span id="cat-level">亲密度 Lv.1</span></div><span id="cat-mood" class="status-tag">想陪你玩</span></div>
+      <div id="cat-message" class="cat-dialogue" role="status">我在呢，今天也陪着你。</div>
+      <div id="cat-stage" class="cat-stage" data-pose="idle"><button id="pet-cat" class="cat-character" type="button" aria-label="摸摸小黑猫" title="摸摸小黑猫"><img id="cat-image" src="cat/cat_idle_pink.png" alt="戴着粉色铃铛项圈的 Q 版小黑猫"></button></div>
+      <div class="cat-stats">
+        <div><label for="cat-fullness">饱食 <strong id="cat-fullness-value">80</strong></label><progress id="cat-fullness" max="100" value="80"></progress></div>
+        <div><label for="cat-happiness">心情 <strong id="cat-happiness-value">75</strong></label><progress id="cat-happiness" max="100" value="75"></progress></div>
+        <div><label for="cat-energy">精力 <strong id="cat-energy-value">85</strong></label><progress id="cat-energy" max="100" value="85"></progress></div>
+      </div>
+      <div class="cat-actions" role="group" aria-label="与小黑猫互动">
+        <button data-cat-action="pet" type="button"><img src="icons/hand-heart.svg" alt="">摸摸</button>
+        <button data-cat-action="feed" type="button"><img src="icons/fish.svg" alt="">投喂</button>
+        <button data-cat-action="play" type="button"><img src="icons/volleyball.svg" alt="">逗猫</button>
+        <button data-cat-action="rest" type="button"><img id="cat-rest-icon" src="icons/moon.svg" alt=""><span id="cat-rest-label">睡觉</span></button>
+      </div>
+      <button id="pin-cat-widget" class="primary-button" type="button"><img src="icons/panels-top-left.svg" alt="">把小黑猫放到桌面</button>
+      <section class="bgm-player" aria-label="背景音乐">
+        <div class="bgm-row"><img class="bgm-symbol" src="icons/music-2.svg" alt=""><div class="bgm-copy"><strong id="bgm-title">轻柔 BGM</strong><span id="bgm-status" role="status">点击播放 · 随机轮播</span></div><button id="bgm-toggle" class="icon-button" type="button" aria-label="播放背景音乐" title="播放背景音乐"><img id="bgm-toggle-icon" src="icons/play.svg" alt=""></button><button id="bgm-next" class="icon-button" type="button" aria-label="随机下一首" title="随机下一首"><img src="icons/skip-forward.svg" alt=""></button></div>
+        <label class="bgm-volume" for="bgm-volume"><img src="icons/volume-2.svg" alt=""><input id="bgm-volume" type="range" min="0" max="100" value="35" aria-label="背景音乐音量"><output id="bgm-volume-value" for="bgm-volume">35%</output></label>
+      </section>
+      <div class="cat-shortcuts"><button id="cat-focus" class="text-action"><img src="icons/clock.svg" alt="">一起专注</button><button id="cat-tasks" class="text-action"><img src="icons/list-todo.svg" alt="">看看待办</button></div>
+      <p id="cat-days" class="cat-days">这是我们相伴的第 1 天</p>
+    </div>
+  </main>
+
+  <div id="cat-settings-overlay" class="sheet-backdrop" hidden>
+    <section class="editor-sheet" role="dialog" aria-modal="true" aria-labelledby="cat-settings-heading">
+      <div class="sheet-heading"><h2 id="cat-settings-heading">小黑猫设置</h2><button id="close-cat-settings" class="icon-button" aria-label="关闭设置" title="关闭设置"><img src="icons/x.svg" alt=""></button></div>
+      <form id="cat-settings-form">
+        <label class="form-field">昵称<input id="cat-nickname" maxlength="12" required placeholder="给小黑猫取个名字"></label>
+        <fieldset class="cat-options"><legend>铃铛项圈</legend><div class="cat-swatches">
+          <label><input type="radio" name="cat-collar" value="pink" checked><span class="cat-swatch collar-pink"></span><small>樱花粉</small></label>
+          <label><input type="radio" name="cat-collar" value="mint"><span class="cat-swatch collar-mint"></span><small>薄荷绿</small></label>
+          <label><input type="radio" name="cat-collar" value="gold"><span class="cat-swatch collar-gold"></span><small>蜂蜜金</small></label>
+        </div></fieldset>
+        <fieldset class="cat-options"><legend>桌面组件背景</legend><div class="cat-swatches">
+          <label><input type="radio" name="cat-theme" value="blush" checked><span class="cat-swatch theme-blush"></span><small>暖粉</small></label>
+          <label><input type="radio" name="cat-theme" value="mint"><span class="cat-swatch theme-mint"></span><small>浅绿</small></label>
+          <label><input type="radio" name="cat-theme" value="clear"><span class="cat-swatch theme-clear"></span><small>透明</small></label>
+        </div></fieldset>
+        <label class="cat-setting-toggle"><span>应用内轻动画</span><input id="cat-animations" type="checkbox" checked></label>
+        <label class="cat-setting-toggle"><span>桌面显示饱食、心情和精力</span><input id="cat-show-stats" type="checkbox" checked></label>
+        <p id="cat-settings-error" class="input-error" role="alert" hidden></p>
+        <button id="save-cat-settings" class="primary-button" type="submit">保存设置</button>
+      </form>
+    </section>
+  </div>
+
+  <div id="editor-overlay" class="sheet-backdrop" hidden>
+    <section class="editor-sheet" role="dialog" aria-modal="true" aria-labelledby="editor-heading">
+      <div class="sheet-heading"><h2 id="editor-heading">新增备忘录</h2><button id="close-editor" class="icon-button" aria-label="关闭编辑" title="关闭编辑"><img src="icons/x.svg" alt=""></button></div>
+      <form id="item-form">
+        <label class="form-field">标题<input id="item-title" maxlength="80" required placeholder="记下这件事"></label>
+        <label class="form-field">内容<textarea id="item-body" maxlength="5000" rows="5" placeholder="补充一点细节…"></textarea></label>
+        <label id="item-date-field" class="form-field" hidden><span id="item-date-label">截止时间</span><input id="item-date" type="datetime-local" max="2099-12-31T23:59"></label>
+        <p id="item-error" class="input-error" role="alert" hidden></p>
+        <button class="primary-button" type="submit">保存</button>
+      </form>
+      <div class="editor-actions"><button id="item-calendar" class="text-action"><img src="icons/calendar-plus.svg" alt="">保存并加入日历</button><button id="delete-item" class="text-action danger"><img src="icons/trash-2.svg" alt="">删除</button></div>
+      <p id="calendar-save-note" class="muted">日历提醒需要在系统日历中确认保存。导入、导出后的两份记录独立保存。</p>
+      <div id="delete-confirm" class="inline-confirm" hidden><p>删除这条记录？</p><button id="confirm-delete" class="danger">确认删除</button><button id="cancel-delete">保留</button></div>
+    </section>
+  </div>
+  <div id="calendar-overlay" class="sheet-backdrop" hidden>
+    <section class="editor-sheet" role="dialog" aria-modal="true" aria-labelledby="calendar-heading">
+      <div class="sheet-heading"><h2 id="calendar-heading">从日历导入</h2><button id="close-calendar" class="icon-button" aria-label="关闭日历" title="关闭日历"><img src="icons/x.svg" alt=""></button></div>
+      <p id="calendar-status" class="status-copy" role="status">正在读取未来 90 天的日程…</p><div id="calendar-list" class="city-results"></div>
+    </section>
+  </div>
+  <div id="toast" class="toast" role="status" hidden></div>
+  <script src="app.js"></script>
+  <script src="assistant-core.js"></script>
+  <script src="assistant.js"></script>
+  <script src="cat.js"></script>
+  <script src="bgm.js"></script>
+  <script src="lucky-core.js"></script>
+  <script src="lucky.js"></script>
+</body>
+</html>

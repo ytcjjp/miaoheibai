@@ -1,0 +1,35 @@
+.lucky-entry { margin-top:12px; min-height:76px; background:#f0f8f4; box-shadow:none; }
+.lucky-entry .tool-icon { width:46px; height:46px; background:#fff; }
+.lucky-entry .tool-icon img { width:26px; height:26px; opacity:.6; }
+.lucky-head-space { width:42px; flex:none; }
+.lucky-content { max-width:540px; padding-top:10px; }
+.lucky-greeting { text-align:center; margin-bottom:24px; }
+.lucky-greeting > img { display:block; width:110px; height:110px; object-fit:contain; margin:0 auto 2px; }
+.lucky-greeting h2 { margin:7px 0; font-size:22px; }
+.lucky-greeting > p:last-child { margin:0; font-size:12px; color:var(--muted); line-height:1.6; }
+.lucky-results { display:grid; gap:16px; }
+.lucky-ticket { padding:18px 14px 14px; border:1px solid #efddd9; border-radius:24px; background:#fff; }
+.lucky-ticket-heading { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:18px; }
+.lucky-ticket-heading h3 { margin:0; font-size:16px; }
+.lucky-ticket-heading > span { font-size:11px; color:var(--muted); white-space:nowrap; }
+.lucky-balls { display:grid; grid-template-columns:repeat(7,minmax(0,48px)); justify-content:space-between; gap:5px; }
+.lucky-ball { position:relative; display:block; min-width:0; overflow:hidden; border-radius:50%; background:#fceae8; color:#bc4548; border:1px solid #f5ceca; }
+.lucky-ball::before { content:""; display:block; padding-bottom:100%; }
+.lucky-ball > span { position:absolute; top:0; right:0; bottom:0; left:0; display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:750; font-variant-numeric:tabular-nums; line-height:1; }
+.lucky-ball.blue { color:#2b68b5; background:#e9f2ff; border-color:#c5daf5; }
+.lucky-ticket-caption { color:var(--muted); margin:13px 0 0; font-size:11px; line-height:18px; }
+.lucky-red-label { color:#bc4548; }.lucky-blue-label { color:#2b68b5; margin-left:12px; }
+.lucky-status { min-height:22px; line-height:22px; margin:22px 0 12px; text-align:center; font-size:12px; color:var(--mint-dark); }
+#refresh-lucky { width:100%; display:flex; justify-content:center; align-items:center; gap:9px; }
+#refresh-lucky img { width:19px; height:19px; filter:brightness(0) invert(1); }
+#lucky-button-label { position:static; font-size:inherit; font-weight:inherit; }
+#refresh-lucky:disabled { cursor:wait; opacity:.72; }
+.lucky-updated { min-height:18px; line-height:18px; margin:12px 0 0; text-align:center; font-size:11px; color:var(--muted); }
+.lucky-note { text-align:center; font-size:11px; color:var(--muted); margin:18px 0 0; }
+.lucky-results.drawing .lucky-ball > span { animation:lucky-roll .17s ease-in-out infinite; }
+.lucky-results.drawing .lucky-ball:nth-child(even) > span { animation-delay:.08s; }
+#lucky-cat.drawing { animation:lucky-sway .4s ease-in-out infinite alternate; }
+@keyframes lucky-roll { 0%,100% { transform:translateY(-2px); opacity:.65; } 50% { transform:translateY(2px); opacity:1; } }
+@keyframes lucky-sway { from { transform:rotate(-5deg); } to { transform:rotate(5deg); } }
+@media (max-width:340px) { .lucky-ticket { padding-right:11px; padding-left:11px; }.lucky-balls { gap:4px; }.lucky-ball > span { font-size:16px; } }
+@media (prefers-reduced-motion:reduce) { .lucky-results.drawing .lucky-ball > span,#lucky-cat.drawing { animation:none; } }

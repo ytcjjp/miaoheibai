@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">喵黑白</string>
+    <string name="widget_notes">备忘录</string>
+    <string name="widget_timer">倒计时</string>
+    <string name="widget_description">时钟、天气、待办与重要日子</string>
+    <string name="cat_widget_name">小黑猫伙伴</string>
+    <string name="cat_widget_description">摸摸、投喂、逗猫和休息，与你一起度过每一天</string>
+    <string name="cat_default_name">小墨</string>
+    <string name="cat_default_level">Lv.1</string>
+    <string name="cat_welcome">我在呢，今天也陪着你。</string>
+    <string name="cat_default_stats">饱食 80 · 心情 75 · 精力 85</string>
+    <string name="cat_pet">摸摸</string>
+    <string name="cat_feed">投喂</string>
+    <string name="cat_play">逗猫</string>
+    <string name="cat_sleep">睡觉</string>
+    <string name="cat_settings">小黑猫设置</string>
+    <string name="bgm_title">轻柔 BGM</string>
+    <string name="bgm_ready">点击播放 · 随机轮播</string>
+    <string name="bgm_play">播放背景音乐</string>
+    <string name="bgm_next">随机下一首</string>
+    <string name="system_music_title">系统音乐</string>
+    <string name="system_music_ready">默认音乐播放器</string>
+    <string name="system_music_play">播放系统音乐</string>
+    <string name="system_music_open">打开音乐播放器</string>
+</resources>

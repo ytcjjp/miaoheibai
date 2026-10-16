@@ -1,6 +1,9 @@
 .gradle/
+/build/
 .toolchain/
 .toolchain-*.zip
 app/build/
 *-debug.apk
+!/喵黑白-debug.apk
+!/喵黑白-*-debug.apk
 local.properties
