@@ -1,4 +1,4 @@
-// Original vector artwork, rasterized for both WebView and Android RemoteViews.
+// Original paired artwork, rasterized for both WebView and Android RemoteViews.
 const fs = require('node:fs');
 const path = require('node:path');
 const sharp = require('sharp');
@@ -8,54 +8,69 @@ const native = path.join(root, 'app/src/main/res/drawable-nodpi');
 const poses = ['idle', 'happy', 'eating', 'playing', 'sleeping', 'hungry', 'tired'];
 const collars = { pink: '#ed9b9d', mint: '#91c6b0', gold: '#e9bf67' };
 
+function cat(pose, silver, collar) {
+  const fur = silver ? 'url(#silver-fur)' : '#121214';
+  const body = silver ? '#f7f9fa' : '#121214';
+  const outline = silver ? '#b6c0c7' : '#09090b';
+  const detail = silver ? '#73818a' : '#c8bdad';
+  const iris = silver ? '#a3cbb5' : '#eac576';
+  const happy = pose === 'happy' || (pose === 'playing' && silver);
+  const eyes = pose === 'sleeping' || happy
+    ? `<path d="M-65 8q22 ${happy ? -27 : 20} 44 0M21 8q22 ${happy ? -27 : 20} 44 0" fill="none" stroke="${silver ? '#687c72' : '#dfc595'}" stroke-width="5.5" stroke-linecap="round"/>`
+    : [-43, 43].map(x => `<ellipse cx="${x}" cy="5" rx="25" ry="29" fill="${iris}"/>
+      <ellipse cx="${x + (silver ? -3 : 3)}" cy="7" rx="17" ry="24" fill="#171b1b"/>
+      <ellipse cx="${x - 8}" cy="-7" rx="7" ry="8" fill="#ffffff"/><circle cx="${x + 10}" cy="19" r="3" fill="#ffffff"/>`).join('');
+  const mouth = pose === 'hungry' ? `<ellipse cx="0" cy="49" rx="6" ry="7" fill="${detail}"/>`
+    : pose === 'eating' ? '<path d="M-9 44q9 22 18 0Z" fill="#e2a5ad"/>'
+    : `<path d="M0 38v7m0 0q-8 12-15 1m15-1q8 12 15 1" fill="none" stroke="${detail}" stroke-width="2.8" stroke-linecap="round"/>`;
+  const resting = pose === 'sleeping' || pose === 'tired';
+  const reach = resting ? [28, 32] : pose === 'playing' ? [75, 36] : [63, 14];
+  const arm = silver ? `M-41 112q-28 26 -${reach[0]} ${reach[1]}` : `M41 112q28 26 ${reach[0]} ${reach[1]}`;
+  return `<g>
+    <path d="${silver ? 'M45 157q87 14 77-56-4-27-20-18' : 'M-44 157q-87 14-77-56 4-27 20-18'}" fill="none" stroke="${silver ? 'url(#silver-tail)' : '#121214'}" stroke-width="29" stroke-linecap="round"/>
+    <ellipse cx="0" cy="117" rx="64" ry="71" fill="${body}" stroke="${outline}" stroke-width="2.5"/>
+    <ellipse cx="-31" cy="174" rx="29" ry="21" fill="${body}" stroke="${outline}" stroke-width="2.5"/>
+    <ellipse cx="31" cy="174" rx="29" ry="21" fill="${body}" stroke="${outline}" stroke-width="2.5"/>
+    <path d="M-37 172v8m9-8v8m53-8v8m9-8v8" stroke="${silver ? '#c0c9cf' : '#323235'}" stroke-width="2" stroke-linecap="round"/>
+    <path d="M-88-37q-15-40-10-81 3-14 17-4l52 49M29-73l52-49q14-10 17 4 5 41-10 81" fill="${silver ? '#c7cfd4' : '#121214'}" stroke="${outline}" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M-84-101q-2 26 7 45l28-16ZM84-101q2 26-7 45L49-72Z" fill="${silver ? '#e9c2c6' : '#584349'}"/>
+    <path d="M0-78c-63 0-105 30-105 79 0 48 41 73 105 73S105 49 105 1C105-48 63-78 0-78Z" fill="${fur}" stroke="${outline}" stroke-width="3"/>
+    ${silver ? '<path d="M-73-43q25-22 48-20M26-63q25-2 47 20" fill="none" stroke="#e2e7ea" stroke-width="7" stroke-linecap="round"/>' : '<path d="M-76-37q14-17 32-20" fill="none" stroke="#28282b" stroke-width="5" stroke-linecap="round"/>'}
+    ${pose === 'tired' ? `<g transform="translate(0 8) scale(1 .62)">${eyes}</g>` : eyes}
+    <ellipse cx="-71" cy="38" rx="14" ry="7" fill="#edb6bd" opacity="${silver ? '.65' : '.36'}"/>
+    <ellipse cx="71" cy="38" rx="14" ry="7" fill="#edb6bd" opacity="${silver ? '.65' : '.36'}"/>
+    <path d="M-7 32q7-4 14 0l-7 7Z" fill="#d8a0a7"/>${mouth}
+    <path d="m-79 27-28-4m28 15-27 5m185-16 28-4m-28 15 27 5" fill="none" stroke="${silver ? '#adb9c1' : '#6d686c'}" stroke-width="2" stroke-linecap="round"/>
+    <path d="M-40 72q40 14 80 0" fill="none" stroke="${collar}" stroke-width="8" stroke-linecap="round"/>
+    <circle cx="0" cy="86" r="10" fill="#f2d58c" stroke="#cba75e" stroke-width="1.8"/>
+    <path d="M-4 86h8m-4 0v6" stroke="#ae8849" stroke-width="1.8" stroke-linecap="round"/>
+    <path d="${arm}" fill="none" stroke="${outline}" stroke-width="30" stroke-linecap="round"/>
+    <path d="${arm}" fill="none" stroke="${body}" stroke-width="25" stroke-linecap="round"/>
+  </g>`;
+}
+
 function illustration(pose, collar) {
-  const sleepy = pose === 'sleeping' || pose === 'tired';
-  const smiling = pose === 'happy' || pose === 'playing';
-  const eyes = sleepy || smiling
-    ? `<path d="M169 225q28 ${smiling ? -35 : 24} 57 0M279 225q28 ${smiling ? -35 : 24} 57 0" fill="none" stroke="#efc972" stroke-width="10" stroke-linecap="round"/>`
-    : `<ellipse cx="198" cy="219" rx="35" ry="40" fill="#efc66d"/><ellipse cx="307" cy="219" rx="35" ry="40" fill="#efc66d"/>
-       <ellipse cx="203" cy="219" rx="17" ry="29" fill="#12151b"/><ellipse cx="302" cy="219" rx="17" ry="29" fill="#12151b"/>
-       <circle cx="191" cy="204" r="9" fill="#fffdf5"/><circle cx="290" cy="204" r="9" fill="#fffdf5"/><circle cx="212" cy="233" r="4" fill="#fffdf5"/><circle cx="311" cy="233" r="4" fill="#fffdf5"/>`;
-  const mouth = pose === 'hungry'
-    ? '<path d="M241 280q15-14 30 0" fill="none" stroke="#a59baa" stroke-width="4" stroke-linecap="round"/>'
-    : pose === 'eating'
-    ? '<path d="M241 270q15 26 30 0" fill="#d98e9a" stroke="#12151b" stroke-width="5" stroke-linejoin="round"/>'
-    : '<path d="M256 263v11m0 0q-10 14-21 1m21-1q10 14 21 1" fill="none" stroke="#a59baa" stroke-width="4" stroke-linecap="round"/>';
-  const extra = pose === 'sleeping'
-    ? '<g fill="none" stroke="#99b6ad" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><path d="M373 151h22l-22 23h22M410 100h30l-30 30h30"/></g>'
-    : pose === 'playing'
-      ? '<circle cx="119" cy="421" r="34" fill="#f2b5ad" stroke="#d88b84" stroke-width="4"/><path d="M89 410q33 4 59 26M100 394q36 21 24 60M88 428q21-24 48-33" fill="none" stroke="#d88b84" stroke-width="3"/>'
-      : pose === 'eating'
-        ? '<ellipse cx="257" cy="438" rx="66" ry="15" fill="#a2c9ba"/><path d="M193 437q5 39 64 39t64-39" fill="#c9e1d5" stroke="#7ea596" stroke-width="4"/><g fill="#bd9270"><circle cx="233" cy="436" r="8"/><circle cx="252" cy="432" r="8"/><circle cx="272" cy="435" r="8"/><circle cx="289" cy="438" r="7"/></g>'
-        : pose === 'happy'
-          ? '<path d="M398 147c-29-17-37-39-22-46 11-5 19 4 22 10 4-7 13-15 23-9 15 10 2 31-23 45Z" fill="#e9a0a4"/>' : '';
-  const paw = pose === 'playing'
-    ? '<path d="M181 343q-62 7-63-32c-1-27 36-35 47-9l31 30" fill="#30323e" stroke="#191b24" stroke-width="6"/><ellipse cx="139" cy="310" rx="12" ry="14" fill="#a97b87"/>' : '';
+  // Each state is one static composition, shared by the app and existing widgets.
+  const cuddling = pose === 'sleeping' || pose === 'tired';
+  const dining = pose === 'eating' || pose === 'hungry';
+  const blackY = cuddling ? 252 : dining ? 253 : 237;
+  const silverY = cuddling ? 252 : dining ? 253 : 245;
+  const extra = pose === 'playing'
+    ? '<circle cx="256" cy="409" r="30" fill="#e9a6ae" stroke="#c8818c" stroke-width="2.5"/><path d="M229 399q30 3 51 27M245 380q22 25 9 57M231 423q15-24 44-29" fill="none" stroke="#c8818c" stroke-width="2.5"/><path d="M277 429q31 22 45 1" fill="none" stroke="#c8818c" stroke-width="3" stroke-linecap="round"/>'
+    : dining
+      ? `<path d="M200 426h112l-8 21q-48 17-96 0Z" fill="#c6e0d5" stroke="#89b3a1" stroke-width="2.5"/><ellipse cx="256" cy="426" rx="56" ry="13" fill="#a3c9b7" stroke="#89b3a1" stroke-width="2.5"/>${pose === 'eating' ? '<g fill="#b38c69"><ellipse cx="228" cy="424" rx="15" ry="6"/><ellipse cx="280" cy="424" rx="15" ry="6"/></g>' : ''}<path d="M256 415v21" stroke="#89b3a1" stroke-width="2"/>`
+      : cuddling ? '<g fill="none" stroke="#94b3a7" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M403 122h17l-17 18h17M430 88h23l-23 24h23"/></g>' : '';
+  const heart = pose === 'happy' ? '<path d="M260 131c-25-16-31-31-19-37 8-4 15 2 19 9 4-7 11-13 19-9 12 6 6 21-19 37Z" fill="#e6a4ae"/>' : '';
   return `<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
-  <ellipse cx="270" cy="470" rx="134" ry="15" fill="#614e4712"/>
-  <path d="M331 426q115 23 103-74-9-47-41-21" fill="none" stroke="#1a1c25" stroke-width="39" stroke-linecap="round"/>
-  <path d="M350 430q85 1 72-68" fill="none" stroke="#363947" stroke-width="11" stroke-linecap="round"/>
-  <ellipse cx="257" cy="366" rx="94" ry="100" fill="#262832" stroke="#191b24" stroke-width="6"/>
-  <ellipse cx="256" cy="383" rx="64" ry="66" fill="#30333f"/>
-  <ellipse cx="211" cy="440" rx="34" ry="29" fill="#30333f" stroke="#191b24" stroke-width="6"/>
-  <ellipse cx="303" cy="440" rx="34" ry="29" fill="#30333f" stroke="#191b24" stroke-width="6"/>
-  <path d="M206 437v13m12-13v13m78-13v13m12-13v13" stroke="#595563" stroke-width="3" stroke-linecap="round"/>
-  <path d="M136 173 126 65q32-9 91 61M301 125q55-62 88-60l-9 109" fill="#272934" stroke="#191b24" stroke-width="7" stroke-linejoin="round"/>
-  <path d="m143 89 10 67 43-20Z M370 89l-11 67-42-20Z" fill="#a07b89"/>
-  <path d="M130 165q-23 33-22 72-10 5-16 18l22 4q13 66 142 68 128-2 141-68l22-4q-6-13-16-18 1-39-22-72-34-50-125-50t-126 50Z" fill="#262832" stroke="#191b24" stroke-width="7" stroke-linejoin="round"/>
-  <path d="M153 169q30-38 74-34" fill="none" stroke="#3d404d" stroke-width="10" stroke-linecap="round"/>
-  <path d="m241 124 15 20 15-20" fill="none" stroke="#41424e" stroke-width="5" stroke-linejoin="round"/>
-  ${eyes}
-  <ellipse cx="160" cy="263" rx="19" ry="10" fill="#d698a1" opacity=".55"/>
-  <ellipse cx="350" cy="263" rx="19" ry="10" fill="#d698a1" opacity=".55"/>
-  <path d="M246 254q10-5 20 0l-10 10Z" fill="#d5a1a9"/>
-  ${mouth}
-  <path d="m132 254-34-7m34 20-35 4m281-17 34-7m-34 20 35 4" stroke="#797681" stroke-width="3.5" stroke-linecap="round"/>
-  <path d="M191 319q65 20 130 0" fill="none" stroke="${collar}" stroke-width="14" stroke-linecap="round"/>
-  <circle cx="257" cy="337" r="16" fill="#f1d17e" stroke="#cda04c" stroke-width="3"/>
-  <path d="M251 338h12m-6 0v10" stroke="#a77b36" stroke-width="3" stroke-linecap="round"/>
-  ${paw}${extra}
-  </svg>`;
+    <defs>
+      <linearGradient id="silver-fur" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#bac3cb"/><stop offset=".36" stop-color="#edf1f3"/><stop offset=".7" stop-color="#ffffff"/></linearGradient>
+      <linearGradient id="silver-tail" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#f8fafb"/><stop offset=".6" stop-color="#e0e6ea"/><stop offset="1" stop-color="#aab6c0"/></linearGradient>
+    </defs>
+    <ellipse cx="256" cy="456" rx="204" ry="15" fill="#67574f0e"/>
+    <g transform="translate(165 ${blackY}) rotate(${cuddling ? 10 : pose === 'happy' ? 8 : 4})">${cat(pose, false, collar)}</g>
+    <g transform="translate(347 ${silverY}) rotate(${cuddling ? -12 : pose === 'happy' ? -10 : -7})">${cat(pose, true, '#91c6b0')}</g>
+    ${extra}${heart}
+  </svg>`.split('\n').map(line => line.trimEnd()).join('\n');
 }
 
 (async () => {
@@ -64,19 +79,15 @@ function illustration(pose, collar) {
     for (const pose of poses) {
       const svg = illustration(pose, color);
       fs.writeFileSync(path.join(web, `cat_${pose}_${collar}.svg`), svg);
-      const png = await sharp(Buffer.from(svg)).resize(512, 512).png().toBuffer();
-      fs.writeFileSync(path.join(web, `cat_${pose}_${collar}.png`), png);
-      await sharp(Buffer.from(svg)).resize(1024, 1024).png()
-        .toFile(path.join(native, `cat_${pose}_${collar}.png`));
+      await sharp(Buffer.from(svg)).resize(512, 512).png().toFile(path.join(web, `cat_${pose}_${collar}.png`));
+      await sharp(Buffer.from(svg)).resize(1024, 1024).png().toFile(path.join(native, `cat_${pose}_${collar}.png`));
     }
   }
   for (const [action, name] of Object.entries({ pet: 'hand-heart', feed: 'fish', play: 'volleyball', sleep: 'moon', wake: 'sun', settings: 'settings-2' })) {
-    await sharp(path.join(root, 'app/src/main/assets/icons', `${name}.svg`)).resize(64, 64).png()
-      .toFile(path.join(native, `cat_icon_${action}.png`));
+    await sharp(path.join(root, 'app/src/main/assets/icons', `${name}.svg`)).resize(64, 64).png().toFile(path.join(native, `cat_icon_${action}.png`));
   }
   for (const [action, name] of Object.entries({ play: 'play', pause: 'pause', next: 'skip-forward', stop: 'square', music: 'music-2' })) {
-    await sharp(path.join(root, 'app/src/main/assets/icons', `${name}.svg`)).resize(64, 64).png()
-      .toFile(path.join(native, `bgm_icon_${action}.png`));
+    await sharp(path.join(root, 'app/src/main/assets/icons', `${name}.svg`)).resize(64, 64).png().toFile(path.join(native, `bgm_icon_${action}.png`));
   }
-  console.log('Rendered 21 original cat poses and widget action icons.');
+  console.log('Rendered 21 original paired-cat scenes and widget action icons.');
 })().catch(error => { console.error(error); process.exitCode = 1; });

@@ -137,7 +137,7 @@ final class AssistantBridge {
             try {
                 AppWidgetManager manager = AppWidgetManager.getInstance(activity);
                 if (!manager.isRequestPinAppWidgetSupported()) {
-                    String label = provider == CatWidget.class ? "小黑猫伙伴" : activity.getString(R.string.app_name);
+                    String label = provider == CatWidget.class ? activity.getString(R.string.cat_widget_name) : activity.getString(R.string.app_name);
                     error("message", "桌面不支持直接添加，请长按桌面，在小组件中选择" + label);
                     return;
                 }

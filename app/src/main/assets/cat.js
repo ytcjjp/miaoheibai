@@ -6,23 +6,25 @@
   const collars = ['pink', 'mint', 'gold'];
   let state = { name: '小墨', collar: 'pink', theme: 'blush', animations: true, showStats: true,
     fullness: 80, happiness: 75, energy: 85, level: 1, days: 1, sleeping: false,
-    pose: 'idle', mood: '想陪你玩', message: '我在呢，今天也陪着你。' };
+    pose: 'idle', mood: '想陪你玩', message: '小银靠过来啦，我们一起陪着你。' };
   let previousFocus;
   const toast = (message) => window.showAppToast(message);
 
   function render() {
     const pose = poses.includes(state.pose) ? state.pose : 'idle';
     const collar = collars.includes(state.collar) ? state.collar : 'pink';
-    const image = `cat/cat_${pose}_${collar}.png`;
-    $('cat-name').textContent = state.name;
+    const image = `cat/cat_${pose}_${collar}.svg`;
+    const pairName = `${state.name}和小银`;
+    $('cat-name').textContent = pairName;
     $('cat-level').textContent = `亲密度 Lv.${state.level}`;
     $('cat-mood').textContent = state.mood;
     $('cat-message').textContent = state.message;
     $('cat-image').src = image;
-    $('cat-image').alt = `${state.name}，${state.mood}`;
-    $('cat-home-image').src = `cat/cat_${state.sleeping ? 'sleeping' : 'idle'}_${collar}.png`;
-    $('cat-home-caption').textContent = `${state.name} · Lv.${state.level}`;
-    $('pet-cat').setAttribute('aria-label', `摸摸${state.name}`);
+    $('cat-image').alt = `纯黑猫${state.name}和银渐层白猫小银贴在一起，${state.mood}`;
+    $('cat-home-image').src = `cat/cat_${state.sleeping ? 'sleeping' : 'idle'}_${collar}.svg`;
+    $('cat-home-caption').textContent = `${pairName} · Lv.${state.level}`;
+    $('pet-cat').setAttribute('aria-label', `摸摸${pairName}`);
+    $('pet-cat').title = `摸摸${pairName}`;
     $('cat-stage').dataset.pose = pose;
     $('cat-page').classList.toggle('motion-off', state.animations === false);
     for (const key of ['fullness', 'happiness', 'energy']) {
@@ -42,14 +44,14 @@
       state = result;
       render();
       return true;
-    } catch (_) { toast('小黑猫的状态读取失败，请稍后重试'); return false; }
+    } catch (_) { toast('猫咪伙伴的状态读取失败，请稍后重试'); return false; }
   }
   window.refreshCat = function () {
     if (!bridge || !bridge.catState) { render(); return; }
-    try { accept(bridge.catState()); } catch (_) { toast('暂时没有联系上小黑猫，请重试'); }
+    try { accept(bridge.catState()); } catch (_) { toast('暂时没有联系上猫咪伙伴，请重试'); }
   };
   function interact(action) {
-    if (!bridge || !bridge.catAction) { toast('小黑猫互动在安卓安装版中可用'); return; }
+    if (!bridge || !bridge.catAction) { toast('猫咪互动在安卓安装版中可用'); return; }
     try {
       if (accept(bridge.catAction(action))) {
         $('pet-cat').classList.remove('cat-bounce');
@@ -90,14 +92,14 @@
       $('cat-settings-error').hidden = false;
       return;
     }
-    if (!bridge || !bridge.saveCatSettings) { toast('小黑猫设置在安卓安装版中可用'); return; }
+    if (!bridge || !bridge.saveCatSettings) { toast('猫咪设置在安卓安装版中可用'); return; }
     const settings = { name, collar: document.querySelector('[name="cat-collar"]:checked').value,
       theme: document.querySelector('[name="cat-theme"]:checked').value,
       animations: $('cat-animations').checked, showStats: $('cat-show-stats').checked };
     try {
       const result = JSON.parse(bridge.saveCatSettings(JSON.stringify(settings)));
       if (result.error) { $('cat-settings-error').textContent = result.error; $('cat-settings-error').hidden = false; return; }
-      if (accept(result)) { closeSettings(); toast('小黑猫的设置已保存'); }
+      if (accept(result)) { closeSettings(); toast('猫咪伙伴的设置已保存'); }
     } catch (_) { toast('设置保存失败，请重试'); }
   });
   document.querySelectorAll('[data-cat-action]').forEach((button) => button.addEventListener('click', () => interact(button.dataset.catAction)));
@@ -106,7 +108,7 @@
   $('open-cat-settings').addEventListener('click', window.openCatSettings);
   $('close-cat-settings').addEventListener('click', closeSettings);
   $('pin-cat-widget').addEventListener('click', () => {
-    if (!bridge || !bridge.addCatWidget) { toast('请在安卓安装版中添加桌面小黑猫'); return; }
+    if (!bridge || !bridge.addCatWidget) { toast('请在安卓安装版中添加桌面猫咪伙伴'); return; }
     try { bridge.addCatWidget(); } catch (_) { toast('添加未完成，请从桌面的小组件列表添加'); }
   });
   $('cat-focus').addEventListener('click', () => window.openAssistantPage('timer'));

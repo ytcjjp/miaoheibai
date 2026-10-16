@@ -39,8 +39,8 @@ final class CatState {
                 : result.getDouble("energy") <= 20 ? "tired" : result.getDouble("happiness") >= 85 ? "happy" : "idle";
         String mood = sleeping ? "睡觉中" : pose.equals("hungry") ? "有点饿" : pose.equals("tired") ? "想休息"
                 : pose.equals("happy") ? "超开心" : "想陪你玩";
-        String message = sleeping ? "呼噜呼噜…梦里也有你。" : pose.equals("hungry") ? "肚子咕噜咕噜，想吃小鱼干。"
-                : pose.equals("tired") ? "玩累啦，可以陪我睡一会儿吗？" : pose.equals("happy") ? "今天的快乐，是你给的呀！" : "我在呢，今天也陪着你。";
+        String message = sleeping ? "靠着小银睡着啦，呼噜呼噜…" : pose.equals("hungry") ? "和小银一起等开饭，想吃小鱼干。"
+                : pose.equals("tired") ? "玩累啦，靠着小银眯一会儿。" : pose.equals("happy") ? "和小银蹭蹭脸，快乐分你一半！" : "小银靠过来啦，我们一起陪着你。";
         long age = Math.max(0, now - result.optLong("messageAt", 0));
         if (result.optLong("messageAt", 0) > 0 && age < 60_000) message = result.optString("message", message);
         if (!sleeping && result.optLong("actionAt", 0) > 0 && Math.max(0, now - result.optLong("actionAt")) < 4500) {
@@ -68,13 +68,13 @@ final class CatState {
         if (action.equals("pet")) {
             state.put("happiness", bounded(state.getDouble("happiness") + (asleep ? 3 : 8)));
             bond = 2;
-            message = asleep ? "睡梦里也认得你的手，呼噜…" : "蹭蹭你的手，最喜欢你啦。";
+            message = asleep ? "挨着小银，睡梦里也认得你的手。" : "和小银一起蹭蹭你的手，最喜欢你啦。";
         } else if (action.equals("feed")) {
             if (state.getDouble("fullness") >= 95) return say(state, "肚肚饱饱的，陪我玩一会儿吧。", now);
             state.put("fullness", bounded(state.getDouble("fullness") + 18))
                     .put("happiness", bounded(state.getDouble("happiness") + 3));
             bond = 3;
-            message = "小鱼干真香，给你留一口！";
+            message = "和小银分小鱼干，也给你留一口！";
         } else if (action.equals("play")) {
             if (state.getDouble("energy") < 10) return say(state, "有点困啦，先让我睡一会儿。", now);
             if (state.getDouble("fullness") < 10) return say(state, "想先吃点东西，再陪你追球球。", now);
@@ -82,10 +82,10 @@ final class CatState {
                     .put("fullness", bounded(state.getDouble("fullness") - 4))
                     .put("happiness", bounded(state.getDouble("happiness") + 12));
             bond = 4;
-            message = "抓到球球啦！再蹦一下！";
+            message = "和小银一起抓到球球啦！";
         } else {
             state.put("sleeping", !asleep);
-            message = asleep ? "伸个懒腰，又能陪着你啦。" : "晚安，醒来还想看到你。";
+            message = asleep ? "叫上小银，又能一起陪着你啦。" : "挨着小银睡觉啦，醒来还想看到你。";
         }
         state.put("last_" + action, now).put("lastAction", action).put("actionAt", now)
                 .put("bond", Math.min(1_000_000, Math.max(0, state.optInt("bond")) + bond))

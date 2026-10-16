@@ -198,16 +198,17 @@ button:disabled { opacity:.45; cursor:default; }
 @media (max-width:340px) { .weather-band,.feature-content,.editor-sheet { padding-left:18px; padding-right:18px; }.welcome h1 { font-size:26px; }.home-time { font-size:25px; }.cat-portrait { max-width:136px; height:149px; }.mini-tool { padding:14px; }.mini-tool strong { font-size:14px; }.today { font-size:11px; }.head-label { font-size:12px; } }
 @media (min-width:700px) { .home-head { min-height:300px; }.cat-portrait { max-width:190px; height:190px; }.editor-sheet { border-radius:27px; margin-bottom:24px; } }
 
-.cat-tool { background:#fff3df; padding-top:59px; }
-.mini-tool.cat-tool > img { position:absolute; right:8px; top:2px; width:73px; height:73px; margin:0; opacity:1; }
+.cat-tool { background:#fff3df; padding-top:72px; }
+.mini-tool.cat-tool > img { position:absolute; right:6px; top:-8px; width:98px; height:80px; margin:0; opacity:1; }
 .cat-content { max-width:560px; padding-top:21px; }
 .cat-heading { display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; gap:10px; }
-.cat-heading h2 { margin:0 0 4px; font-size:24px; overflow-wrap:anywhere; }
+.cat-heading h2 { margin:0 0 4px; font-size:22px; overflow-wrap:anywhere; }
+.cat-heading > .status-tag { flex:none; }
 .cat-heading > div { min-width:0; }.cat-heading > div > span { font-size:12px; color:#9f8477; }
 .cat-dialogue { position:relative; text-align:center; padding:14px 17px; min-height:62px; display:flex; align-items:center; justify-content:center; border:1px solid #efe1da; border-radius:22px; background:#fff; color:#886d61; font-size:14px; line-height:1.7; }
 .cat-dialogue::after { content:""; position:absolute; bottom:-7px; left:calc(50% - 7px); width:12px; height:12px; border-right:1px solid #efe1da; border-bottom:1px solid #efe1da; background:#fff; transform:rotate(45deg); }
-.cat-stage { position:relative; height:266px; display:flex; align-items:center; justify-content:center; }
-.cat-character { width:280px; max-width:100%; height:266px; padding:0; border:0; background:transparent; border-radius:32px; -webkit-tap-highlight-color:transparent; }
+.cat-stage { position:relative; height:290px; display:flex; align-items:center; justify-content:center; }
+.cat-character { width:356px; max-width:100%; height:290px; padding:0; border:0; background:transparent; border-radius:32px; -webkit-tap-highlight-color:transparent; }
 .cat-character img { display:block; width:100%; height:100%; object-fit:contain; animation:cat-breathe 3.5s ease-in-out infinite; transform-origin:50% 90%; }
 .cat-stage[data-pose="sleeping"] img { animation-duration:5s; }
 .cat-character.cat-bounce { animation:cat-greet .65s ease-in-out; }

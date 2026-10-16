@@ -51,7 +51,7 @@
         <button class="mini-tool mint-tool" data-page="notes" type="button"><img src="icons/notebook-pen.svg" alt=""><strong>备忘录</strong><small id="notes-count">随手记一笔</small></button>
         <button class="mini-tool yellow-tool" data-page="tasks" type="button"><img src="icons/list-todo.svg" alt=""><strong>待办事项</strong><small id="tasks-count">今天想做什么</small></button>
         <button class="mini-tool pink-tool" data-page="events" type="button"><img src="icons/calendar-days.svg" alt=""><strong>日期倒计时</strong><small id="events-count">记住重要日子</small></button>
-        <button class="mini-tool cat-tool" data-page="cat" type="button"><img id="cat-home-image" src="cat/cat_idle_pink.png" alt=""><strong>小黑猫伙伴</strong><small id="cat-home-caption">小墨在等你</small></button>
+        <button class="mini-tool cat-tool" data-page="cat" type="button"><img id="cat-home-image" src="cat/cat_idle_pink.svg" alt=""><strong>黑白猫伙伴</strong><small id="cat-home-caption">小墨和小银在等你</small></button>
       </div>
       <button class="tool-row lucky-entry" data-page="lucky" type="button"><span class="tool-icon"><img src="icons/paw-print.svg" alt=""></span><span class="tool-copy"><strong>每日幸运数字</strong><small>让小猫捎来一点好运</small></span><span class="arrow" aria-hidden="true">›</span></button>
     </section>
@@ -163,7 +163,7 @@
   <main id="lucky-page" class="page" hidden>
     <header class="timer-head"><button class="icon-button page-back" type="button" aria-label="返回首页" title="返回首页"><img src="icons/chevron-left.svg" alt=""></button><strong>每日幸运数字</strong><span class="lucky-head-space" aria-hidden="true"></span></header>
     <div class="feature-content lucky-content">
-      <div class="lucky-greeting"><img id="lucky-cat" src="cat/cat_happy_gold.png" alt="送来好运的小黑猫"><p id="lucky-date" class="section-kicker"></p><h2>今天也有小幸运</h2><p>愿美好的小事，悄悄来到你身边。</p></div>
+      <div class="lucky-greeting"><img id="lucky-cat" src="cat/cat_happy_gold.svg" alt="一起送来好运的纯黑猫和银渐层白猫"><p id="lucky-date" class="section-kicker"></p><h2>今天也有小幸运</h2><p>愿美好的小事，悄悄来到你身边。</p></div>
       <div id="lucky-results" class="lucky-results" aria-busy="false">
         <article class="lucky-ticket"><div class="lucky-ticket-heading"><h3>体彩 7 位数</h3><span>江苏体彩</span></div><div id="lucky-seven" class="lucky-balls" role="group" aria-label="体彩 7 位数，等待抽取"></div><p class="lucky-ticket-caption">7 位数字 · 按位排列</p></article>
         <article class="lucky-ticket"><div class="lucky-ticket-heading"><h3>双色球</h3><span>中国福彩</span></div><div id="lucky-double" class="lucky-balls" role="group" aria-label="双色球，等待抽取"></div><p class="lucky-ticket-caption"><span class="lucky-red-label">红球</span> 6 个 <span class="lucky-blue-label">蓝球</span> 1 个</p></article>
@@ -176,23 +176,23 @@
   </main>
 
   <main id="cat-page" class="page cat-page" hidden>
-    <header class="timer-head"><button class="icon-button page-back" aria-label="返回首页" title="返回首页"><img src="icons/chevron-left.svg" alt=""></button><strong>小黑猫伙伴</strong><button id="open-cat-settings" class="icon-button" aria-label="小黑猫设置" title="小黑猫设置"><img src="icons/settings-2.svg" alt=""></button></header>
+    <header class="timer-head"><button class="icon-button page-back" aria-label="返回首页" title="返回首页"><img src="icons/chevron-left.svg" alt=""></button><strong>黑白猫伙伴</strong><button id="open-cat-settings" class="icon-button" aria-label="猫咪伙伴设置" title="猫咪伙伴设置"><img src="icons/settings-2.svg" alt=""></button></header>
     <div class="feature-content cat-content">
-      <div class="cat-heading"><div><h2 id="cat-name">小墨</h2><span id="cat-level">亲密度 Lv.1</span></div><span id="cat-mood" class="status-tag">想陪你玩</span></div>
-      <div id="cat-message" class="cat-dialogue" role="status">我在呢，今天也陪着你。</div>
-      <div id="cat-stage" class="cat-stage" data-pose="idle"><button id="pet-cat" class="cat-character" type="button" aria-label="摸摸小黑猫" title="摸摸小黑猫"><img id="cat-image" src="cat/cat_idle_pink.png" alt="戴着粉色铃铛项圈的 Q 版小黑猫"></button></div>
+      <div class="cat-heading"><div><h2 id="cat-name">小墨和小银</h2><span id="cat-level">亲密度 Lv.1</span></div><span id="cat-mood" class="status-tag">想陪你玩</span></div>
+      <div id="cat-message" class="cat-dialogue" role="status">小银靠过来啦，我们一起陪着你。</div>
+      <div id="cat-stage" class="cat-stage" data-pose="idle"><button id="pet-cat" class="cat-character" type="button" aria-label="摸摸小墨和小银" title="摸摸小墨和小银"><img id="cat-image" src="cat/cat_idle_pink.svg" alt="贴在一起的 Q 版纯黑猫小墨和银渐层白猫小银"></button></div>
       <div class="cat-stats">
         <div><label for="cat-fullness">饱食 <strong id="cat-fullness-value">80</strong></label><progress id="cat-fullness" max="100" value="80"></progress></div>
         <div><label for="cat-happiness">心情 <strong id="cat-happiness-value">75</strong></label><progress id="cat-happiness" max="100" value="75"></progress></div>
         <div><label for="cat-energy">精力 <strong id="cat-energy-value">85</strong></label><progress id="cat-energy" max="100" value="85"></progress></div>
       </div>
-      <div class="cat-actions" role="group" aria-label="与小黑猫互动">
+      <div class="cat-actions" role="group" aria-label="与黑白猫伙伴互动">
         <button data-cat-action="pet" type="button"><img src="icons/hand-heart.svg" alt="">摸摸</button>
         <button data-cat-action="feed" type="button"><img src="icons/fish.svg" alt="">投喂</button>
         <button data-cat-action="play" type="button"><img src="icons/volleyball.svg" alt="">逗猫</button>
         <button data-cat-action="rest" type="button"><img id="cat-rest-icon" src="icons/moon.svg" alt=""><span id="cat-rest-label">睡觉</span></button>
       </div>
-      <button id="pin-cat-widget" class="primary-button" type="button"><img src="icons/panels-top-left.svg" alt="">把小黑猫放到桌面</button>
+      <button id="pin-cat-widget" class="primary-button" type="button"><img src="icons/panels-top-left.svg" alt="">把两只猫咪放到桌面</button>
       <section class="bgm-player" aria-label="背景音乐">
         <div class="bgm-row"><img class="bgm-symbol" src="icons/music-2.svg" alt=""><div class="bgm-copy"><strong id="bgm-title">轻柔 BGM</strong><span id="bgm-status" role="status">点击播放 · 随机轮播</span></div><button id="bgm-toggle" class="icon-button" type="button" aria-label="播放背景音乐" title="播放背景音乐"><img id="bgm-toggle-icon" src="icons/play.svg" alt=""></button><button id="bgm-next" class="icon-button" type="button" aria-label="随机下一首" title="随机下一首"><img src="icons/skip-forward.svg" alt=""></button></div>
         <label class="bgm-volume" for="bgm-volume"><img src="icons/volume-2.svg" alt=""><input id="bgm-volume" type="range" min="0" max="100" value="35" aria-label="背景音乐音量"><output id="bgm-volume-value" for="bgm-volume">35%</output></label>
@@ -204,10 +204,10 @@
 
   <div id="cat-settings-overlay" class="sheet-backdrop" hidden>
     <section class="editor-sheet" role="dialog" aria-modal="true" aria-labelledby="cat-settings-heading">
-      <div class="sheet-heading"><h2 id="cat-settings-heading">小黑猫设置</h2><button id="close-cat-settings" class="icon-button" aria-label="关闭设置" title="关闭设置"><img src="icons/x.svg" alt=""></button></div>
+      <div class="sheet-heading"><h2 id="cat-settings-heading">猫咪伙伴设置</h2><button id="close-cat-settings" class="icon-button" aria-label="关闭设置" title="关闭设置"><img src="icons/x.svg" alt=""></button></div>
       <form id="cat-settings-form">
-        <label class="form-field">昵称<input id="cat-nickname" maxlength="12" required placeholder="给小黑猫取个名字"></label>
-        <fieldset class="cat-options"><legend>铃铛项圈</legend><div class="cat-swatches">
+        <label class="form-field">小黑的昵称<input id="cat-nickname" maxlength="12" required placeholder="给小黑取个名字"></label>
+        <fieldset class="cat-options"><legend>小黑的铃铛项圈</legend><div class="cat-swatches">
           <label><input type="radio" name="cat-collar" value="pink" checked><span class="cat-swatch collar-pink"></span><small>樱花粉</small></label>
           <label><input type="radio" name="cat-collar" value="mint"><span class="cat-swatch collar-mint"></span><small>薄荷绿</small></label>
           <label><input type="radio" name="cat-collar" value="gold"><span class="cat-swatch collar-gold"></span><small>蜂蜜金</small></label>

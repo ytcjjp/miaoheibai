@@ -83,14 +83,14 @@ public final class CatWidget extends AppWidgetProvider {
                 int background = theme.equals("mint") ? R.drawable.cat_widget_mint
                         : theme.equals("clear") ? R.drawable.cat_widget_clear : R.drawable.cat_widget_blush;
                 view.setInt(R.id.cat_widget_root, "setBackgroundResource", background);
-                view.setTextViewText(R.id.cat_widget_name, name);
+                view.setTextViewText(R.id.cat_widget_name, name + "和小银");
                 view.setTextViewText(R.id.cat_widget_level, "Lv." + state.optInt("level", 1));
                 view.setTextViewText(R.id.cat_widget_message, state.optString("message"));
                 view.setTextViewText(R.id.cat_widget_stats, "饱食 " + Math.round(state.optDouble("fullness"))
                         + " · 心情 " + Math.round(state.optDouble("happiness")) + " · 精力 " + Math.round(state.optDouble("energy")));
                 view.setViewVisibility(R.id.cat_widget_stats, state.optBoolean("showStats", true) ? View.VISIBLE : View.GONE);
                 view.setImageViewResource(R.id.cat_widget_image, resource(state));
-                view.setContentDescription(R.id.cat_widget_image, name + "，" + state.optString("mood") + "，点我摸摸");
+                view.setContentDescription(R.id.cat_widget_image, "纯黑猫" + name + "和银渐层白猫小银，" + state.optString("mood") + "，点我摸摸");
                 boolean sleeping = state.optBoolean("sleeping");
                 view.setTextViewText(R.id.cat_widget_rest_label, sleeping ? "叫醒" : "睡觉");
                 view.setImageViewResource(R.id.cat_widget_rest_icon, sleeping ? R.drawable.cat_icon_wake : R.drawable.cat_icon_sleep);
